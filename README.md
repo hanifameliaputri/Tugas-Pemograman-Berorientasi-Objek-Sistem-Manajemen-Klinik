@@ -38,3 +38,60 @@ Data pasien dan kunjungan disimpan sementara menggunakan `ArrayList`. Karena bel
 6. Selesaikan kunjungan
 7. Keluar
 ```
+
+## Class yang Digunakan
+
+| Class | Peran |
+|---|---|
+| `Orang` | Class induk yang menyimpan ID dan nama |
+| `Pasien` | Turunan dari `Orang`; menyimpan umur dan keluhan pasien |
+| `Dokter` | Turunan dari `Orang`; menyimpan spesialisasi dokter |
+| `Kunjungan` | Mencatat pasien, dokter, tanggal, nomor, dan status kunjungan |
+| `Klinik` | Menyimpan daftar pasien, dokter, dan kunjungan |
+| `SistemManajemenKlinik` | Menjalankan menu dan menerima pilihan pengguna |
+
+## Struktur dan Hierarki Class
+
+Susunan class pada proyek:
+
+```text
+Source Packages
+├── main
+│   └── SistemManajemenKlinik.java
+└── model
+    ├── Dokter.java
+    ├── Klinik.java
+    ├── Kunjungan.java
+    ├── Orang.java
+    └── Pasien.java
+```
+
+Hubungan pewarisan class:
+
+```text
+Orang
+├── Dokter
+└── Pasien
+```
+
+
+
+## Penerapan Inheritance
+
+Program ini menggunakan inheritance pada class `Pasien` dan `Dokter`. Keduanya merupakan turunan dari class `Orang`.
+
+Class `Orang` menyimpan data yang sama-sama dimiliki pasien dan dokter, yaitu `id` dan `nama`. Karena `Pasien` dan `Dokter` menggunakan `extends Orang`, kedua class tersebut tidak perlu menulis ulang atribut dan method untuk ID serta nama.
+
+```java
+public class Pasien extends Orang
+public class Dokter extends Orang
+```
+
+Di dalam constructor `Pasien` dan `Dokter`, `super(id, nama)` digunakan untuk mengirim ID dan nama ke constructor `Orang`. Setelah itu, masing-masing class menyimpan data khususnya: `Pasien` menyimpan umur dan keluhan, sedangkan `Dokter` menyimpan spesialisasi.
+
+- `Orang` menyimpan ID dan nama.
+- `Dokter` mewarisi ID dan nama dari `Orang`, lalu menambahkan spesialisasi.
+- `Pasien` mewarisi ID dan nama dari `Orang`, lalu menambahkan umur dan keluhan.
+- `Kunjungan` mencatat pasien, dokter, tanggal, nomor, dan status kunjungan.
+- `Klinik` menyimpan daftar pasien, dokter, dan kunjungan.
+- `SistemManajemenKlinik` menjalankan menu program.
