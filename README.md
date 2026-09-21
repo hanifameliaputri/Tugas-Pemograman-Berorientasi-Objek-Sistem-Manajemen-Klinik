@@ -74,27 +74,142 @@ Orang
 └── Pasien
 ```
 
+## Konsep PBO dan Kegunaan Kode
+
+| Konsep | Penerapan dalam Program | Kegunaan |
+|---|---|---|
+| Class dan object | `Pasien`, `Dokter`, dan `Kunjungan` | Membuat data pasien, dokter, dan kunjungan sebagai object yang berbeda |
+| Inheritance | `Pasien extends Orang` dan `Dokter extends Orang` | ID dan nama cukup dibuat di `Orang`, lalu diwarisi oleh pasien dan dokter |
+| Encapsulation | Atribut dibuat `private` dan diakses melalui getter atau setter | Mengatur cara data dibaca dan diubah dari class lain |
+| Hubungan antar-object | `Kunjungan` menyimpan object `Pasien` dan `Dokter` | Menunjukkan pasien diperiksa oleh dokter yang mana |
+
+### Kegunaan Beberapa Bagian Kode
+
+- `super(id, nama)` mengirim ID dan nama dari constructor `Pasien` atau `Dokter` ke constructor `Orang`.
+- `getNama()`, `getUmur()`, dan method getter lainnya digunakan untuk membaca data.
+- `setNama()`, `setUmur()`, dan `setKeluhan()` digunakan saat petugas mengubah data pasien.
+- `Klinik` memakai `ArrayList` untuk menyimpan daftar pasien, dokter, dan kunjungan selama program berjalan.
+- `cariPasien()` dan `cariDokter()` mencari data berdasarkan ID.
+- `selesaikan()` pada class `Kunjungan` mengubah status dari **Terdaftar** menjadi **Selesai**.
 
 
-## Penerapan Inheritance
 
-Program ini menggunakan inheritance pada class `Pasien` dan `Dokter`. Keduanya merupakan turunan dari class `Orang`.
 
-Class `Orang` menyimpan data yang sama-sama dimiliki pasien dan dokter, yaitu `id` dan `nama`. Karena `Pasien` dan `Dokter` menggunakan `extends Orang`, kedua class tersebut tidak perlu menulis ulang atribut dan method untuk ID serta nama.
+### 1. Class dan Object
+
+Program menggunakan class untuk menggambarkan data di klinik. Contohnya, class `Pasien` dipakai untuk membuat object pasien.
 
 ```java
-public class Pasien extends Orang
-public class Dokter extends Orang
+Pasien pasien = new Pasien(idPasienBerikutnya, nama, umur, keluhan);
 ```
 
-Di dalam constructor `Pasien` dan `Dokter`, `super(id, nama)` digunakan untuk mengirim ID dan nama ke constructor `Orang`. Setelah itu, masing-masing class menyimpan data khususnya: `Pasien` menyimpan umur dan keluhan, sedangkan `Dokter` menyimpan spesialisasi.
+Kode tersebut membuat satu pasien dengan ID, nama, umur, dan keluhan yang dimasukkan petugas.
 
-- `Orang` menyimpan ID dan nama.
-- `Dokter` mewarisi ID dan nama dari `Orang`, lalu menambahkan spesialisasi.
-- `Pasien` mewarisi ID dan nama dari `Orang`, lalu menambahkan umur dan keluhan.
-- `Kunjungan` mencatat pasien, dokter, tanggal, nomor, dan status kunjungan.
-- `Klinik` menyimpan daftar pasien, dokter, dan kunjungan.
-- `SistemManajemenKlinik` menjalankan menu program.
+### 2. Inheritance (Pewarisan)
+
+`Pasien` dan `Dokter` adalah turunan dari `Orang`.
+
+```java
+public class Pasien extends Orang {
+    private int umur;
+    private String keluhan;
+}
+```
+
+```java
+public class Dokter extends Orang {
+    private final String spesialisasi;
+}
+```
+
+Kata `extends Orang` berarti pasien dan dokter mewarisi ID, nama, serta method dari class `Orang`. Keduanya kemudian menambahkan data khusus masing-masing.
+
+```java
+public Pasien(int id, String nama, int umur, String keluhan) {
+    super(id, nama);
+    this.umur = umur;
+    this.keluhan = keluhan;
+}
+```
+
+`super(id, nama)` mengirim ID dan nama ke constructor `Orang`, sehingga kode untuk mengisi kedua data tersebut tidak perlu ditulis ulang.
+
+### 3. Encapsulation 
+
+Atribut pada class dibuat `private`, sehingga data tidak diubah langsung dari luar class.
+
+```java
+private int umur;
+private String keluhan;
+```
+
+Data dibaca melalui getter dan diubah melalui setter. Contohnya:
+
+```java
+public int getUmur() {
+    return umur;
+}
+
+public void setUmur(int umur) {
+    this.umur = umur;
+}
+```
+
+Method `getUmur()` digunakan untuk membaca umur pasien. Method `setUmur()` digunakan saat petugas memilih menu ubah data pasien.
+
+### 4. Hubungan Pasien dan Dokter dalam Kunjungan
+
+Satu object `Kunjungan` menyimpan pasien dan dokter yang menangani.
+
+```java
+private final Pasien pasien;
+private final Dokter dokter;
+```
+
+Saat pendaftaran berhasil, program membuat kunjungan baru:
+
+```java
+Kunjungan kunjungan = new Kunjungan(
+    nomorKunjunganBerikutnya,
+    pasien,
+    dokter,
+    LocalDate.now().toString()
+);
+```
+
+Dengan begitu, program dapat menampilkan nama pasien dan dokter pada daftar kunjungan.
+
+### 5. Penyimpanan Data dengan ArrayList
+
+Class `Klinik` menyimpan banyak pasien, dokter, dan kunjungan menggunakan `ArrayList`.
+
+```java
+private final ArrayList<Pasien> daftarPasien = new ArrayList<>();
+private final ArrayList<Dokter> daftarDokter = new ArrayList<>();
+private final ArrayList<Kunjungan> daftarKunjungan = new ArrayList<>();
+```
+
+Saat pasien berhasil didaftarkan, object pasien dimasukkan ke daftar:
+
+```java
+public void tambahPasien(Pasien pasien) {
+    daftarPasien.add(pasien);
+}
+```
+
+Data dalam `ArrayList` hanya tersedia selama program berjalan. Saat program ditutup, data tidak tersimpan secara permanen.
+
+### 6. Perubahan Status Kunjungan
+
+Setiap kunjungan memiliki status awal **Terdaftar**. Setelah pemeriksaan selesai, method `selesaikan()` mengubah statusnya.
+
+```java
+public void selesaikan() {
+    this.status = "Selesai";
+}
+```
+
+Method tersebut digunakan pada menu 6 ketika petugas memilih nomor kunjungan yang telah selesai diperiksa.
 
 ## Tampilan Program
 ### Menu Utama
